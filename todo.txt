@@ -1,0 +1,25 @@
+Shader Video Merger Tool – Readme
+
+Overview
+We discovered that many of the gl-transition shaders need more than just “progress,” “from” and “to.” For example, Bounce.glsl requires uniforms like “bounces,” “shadow_colour” and “shadow_height” to work correctly. Without those parameters, the transition renders as a blank frame.
+
+What We Did
+
+Created a single configuration file, shaders/shader_config.json, that lists every shader and its extra_uniform defaults.
+
+Modified main.py so it loads shader_config.json at startup and looks up the right uniforms for whatever shader is selected.
+
+Passed those uniforms into ShaderVideoMerger via its new extra_uniforms argument.
+
+Added a new API endpoint, GET /shaders/config, to expose the config to the frontend.
+
+Updated index.html to:
+• Fetch the JSON config and build form inputs for each uniform in the selected shader
+• Show default values and let users change them before merging
+• Include those custom values in the merge request alongside video files and duration
+
+Next Steps for the Remaining Shaders
+• As you batch-fix each new .glsl file, identify any required uniforms beyond progress/from/to.
+• Add or update its entry in shader_config.json with sensible defaults.
+• The web GUI will automatically display the new controls so anyone can tweak them on the fly.
+• Continue converting the hundreds of shaders in your library using this pattern.

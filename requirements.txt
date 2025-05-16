@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+moderngl
+imageio[pyav]
+pillow
+python-multipart
