@@ -12,20 +12,19 @@ uniform float r; // = 0.5, leaf radius
 out vec4 outColor;
 
 vec4 transition(vec2 uv) {
-    float prog = clamp(progress, 0.001, 1.0); // Avoid division by zero
-    if (prog < 0.01) {
+    if (progress == 0.0) {
         return texture(from, uv);
     }
-    vec2 leaf_uv = (uv - vec2(0.5)) / 2.0 / pow(prog, 1.0); // Larger, slower scaling
-    leaf_uv.y += 0.2; // Reduced offset
+    
+    vec2 leaf_uv = (uv - vec2(0.5)) / 10.0 / pow(progress, 3.5);
+    leaf_uv.y = -leaf_uv.y;
+    float leaf_r = 0.18 * r;
     float o = atan(leaf_uv.y, leaf_uv.x);
-    float leaf = 1.0 - length(leaf_uv) + r * (1.0 + sin(o)) * (1.0 + 0.9 * cos(8.0 * o)) * (1.0 + 0.1 * cos(24.0 * o)) * (0.9 + 0.05 * cos(200.0 * o));
-    float t = smoothstep(0.5, 1.5, leaf); // Wider, softer transition
-    // Debug: Highlight leaf area with white if t > 0.5
-    if (t > 0.5) {
-        return mix(vec4(1.0), texture(to, uv), 0.5); // White-tinted to texture
-    }
-    return texture(from, uv);
+    
+    float leaf_shape = 1.0 - length(leaf_uv) + leaf_r * (1.0 + sin(o)) * (1.0 + 0.9 * cos(8.0 * o)) * (1.0 + 0.1 * cos(24.0 * o)) * (0.9 + 0.05 * cos(200.0 * o));
+    float mask = 1.0 - step(leaf_shape, 1.0);
+    
+    return mix(texture(from, uv), texture(to, uv), mask);
 }
 
 void main()
