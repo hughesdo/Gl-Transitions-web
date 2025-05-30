@@ -1,4 +1,4 @@
-# Gl-Transitions web V1.0
+# Gl-Transitions web
 
 Gl-Transitions web is a video and webpage driven version of https://gl-transitions.com/ for videos. It leverages FastAPI, Uvicorn, ModernGL, and shaders to merge two videos via GPU-accelerated transitions.
 
