@@ -56,11 +56,12 @@ class ShaderVideoMerger:
         """Extract specific frames from video using ffmpeg"""
         start_time = start_frame / self.frame_rate
         duration = frame_count / self.frame_rate
-        
+
         subprocess.run([
             "ffmpeg", "-y", "-i", str(video_path),
             "-ss", str(start_time),
             "-t", str(duration),
+            "-vf", f"scale={self.resolution[0]}:{self.resolution[1]}",  # 🔧 Apply scaling
             "-c:v", "libx264", "-crf", "18",
             "-pix_fmt", "yuv420p",
             str(output_path)
